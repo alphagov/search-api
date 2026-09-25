@@ -1,5 +1,5 @@
 # the key represents the publishing_api document type
-# the value represents the elasticsearch_type defined in config/schema/elasticsearch_types
+# the value represents the opensearch_type defined in config/schema/opensearch_types
 
 aaib_report: aaib_report # Specialist Publisher
 about: edition

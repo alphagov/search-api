@@ -1,5 +1,5 @@
 production: &default
-  base_uri: <%= ENV["ELASTICSEARCH_URI"] || 'http://localhost:9200' %>
+  base_uri: <%= ENV["OPENSEARCH_URI"] || 'http://localhost:9200' %>
   govuk_index_name: "govuk"
   metasearch_index_name: "metasearch"
   page_traffic_index_name: "page-traffic"
@@ -7,14 +7,14 @@ production: &default
   clusters:
     - uri_key: base_uri
       key: A
-      schema_config_file: elasticsearch_schema.yml
+      schema_config_file: opensearch_schema.yml
       default: true
 
 development:
   <<: *default
 
 test:
-  base_uri: <%= ENV.fetch('ELASTICSEARCH_URI', 'http://localhost:9200') %>
+  base_uri: <%= ENV.fetch('OPENSEARCH_URI', 'http://localhost:9200') %>
   govuk_index_name: "govuk_test"
   metasearch_index_name: "metasearch_test"
   page_traffic_index_name: "page-traffic_test"
@@ -22,5 +22,5 @@ test:
   clusters:
     - uri_key: base_uri
       key: A
-      schema_config_file: elasticsearch_schema.yml
+      schema_config_file: opensearch_schema.yml
       default: true

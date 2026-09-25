@@ -2,7 +2,7 @@ module Sitemap
   class Generator
     def initialize(search_config, uploader, timestamp)
       @search_config = search_config
-      @search_client = Services.elasticsearch(hosts: search_config.base_uri, timeout: 10)
+      @search_client = Services.opensearch(hosts: search_config.base_uri, timeout: 10)
       @uploader      = uploader
       @timestamp     = timestamp
       @logger        = Logging.logger[self]

@@ -11,7 +11,7 @@ module SearchIndices
       50
     end
 
-    # How long to wait between reads when streaming data from the elasticsearch server
+    # How long to wait between reads when streaming data from the opensearch server
     TIMEOUT_SECONDS = 5.0
 
     attr_reader :index_name
@@ -23,7 +23,7 @@ module SearchIndices
       raise ArgumentError, "Missing index_name parameter" unless @index_name
 
       @search_config = search_config
-      @elasticsearch_types = @search_config.schema_config.elasticsearch_types(base_index_name)
+      @opensearch_types = @search_config.schema_config.opensearch_types(base_index_name)
       @is_content_index = SearchConfig.govuk_index_name == base_index_name
     end
 
@@ -184,7 +184,7 @@ module SearchIndices
     end
 
     def build_client(options = {})
-      Services.elasticsearch(hosts: @base_uri, timeout: options[:timeout] || TIMEOUT_SECONDS)
+      Services.opensearch(hosts: @base_uri, timeout: options[:timeout] || TIMEOUT_SECONDS)
     end
   end
 end

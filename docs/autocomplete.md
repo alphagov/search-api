@@ -11,7 +11,7 @@ No. Not for users of GOV.UK search.
 
 Autocomplete was added as an experiment at the close of 2019. However, it doesn't appear that this endpoint was ever added to finder-frontend so it's unlikely that it has been tested with real users.
 
-It is possible to see autocomplete suggestions from elasticsearch in the payload but these suggestions are not shown to the user in the supergroup or specialist finders.
+It is possible to see autocomplete suggestions from opensearch in the payload but these suggestions are not shown to the user in the supergroup or specialist finders.
 
 As there were no associated running costs, the endpoint was left in search-api. 
 
@@ -98,7 +98,7 @@ You should see something similar to:
       "index": "govuk",
       "es_score": 17.194002,
       "_id": "/vehicle-tax",
-      "elasticsearch_type": "edition",
+      "opensearch_type": "edition",
       "document_type": "edition"
     }
   ],
@@ -122,11 +122,11 @@ You should see something similar to:
 </details>
 
 
-## How are autocomplete suggestions added to elasticsearch?
+## How are autocomplete suggestions added to opensearch?
 
-Autocomplete suggestions are added to elasticsearch via the `update_popularity` rake task. Currently this job runs [once per day]. The title of the page and a "weighting" are passed to elasticsearch (See [PopularityJob]).
+Autocomplete suggestions are added to opensearch via the `update_popularity` rake task. Currently this job runs [once per day]. The title of the page and a "weighting" are passed to opensearch (See [PopularityJob]).
 
-You can see the payload that is sent to elasticsearch by querying the internal [content-api]
+You can see the payload that is sent to opensearch by querying the internal [content-api]
 
 For example visiting <http://search-api.dev.gov.uk/content?link=/search/services> will show the following at the bottom of the payload:
 
@@ -195,14 +195,14 @@ For example visiting <http://search-api.dev.gov.uk/content?link=/search/services
 ```
 </details>
 
-## What does the autocomplete payload returned from elasticsearch look like?
+## What does the autocomplete payload returned from opensearch look like?
 
-If you set your logging level to DEBUG you should be able to see the response from elasticsearch that includes any autocomplete suggestions.
+If you set your logging level to DEBUG you should be able to see the response from opensearch that includes any autocomplete suggestions.
 
 For example if you visit <http://search-api.dev.gov.uk/search?q=tax&suggest=autocomplete&count=1> locally, you should see something similar to:
 
 <details>
-<summary>Full response from elasticsearch</summary>
+<summary>Full response from opensearch</summary>
 
 ```ruby
 {

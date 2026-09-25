@@ -1,6 +1,6 @@
 # EntityExpander
 #
-# Takes an elasticsearch result, which can have arrays of slugs and translates
+# Takes an opensearch result, which can have arrays of slugs and translates
 # those into objects with extra data. For example, a result can contain
 # organisations like this:
 #

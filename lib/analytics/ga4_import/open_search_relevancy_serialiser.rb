@@ -1,6 +1,6 @@
 module Analytics
   module Ga4Import
-    class ElasticSearchRelevancySerialiser
+    class OpenSearchRelevancySerialiser
       def initialize(consolidated_data)
         @consolidated_data = consolidated_data
       end
@@ -8,8 +8,8 @@ module Analytics
       def relevance
         consolidated_data.flat_map.with_index(1) do |(base_path, page_views), index|
           [
-            elastic_search_identifier(base_path).to_json,
-            elastic_search_rank(base_path, index, page_views).to_json,
+            open_search_identifier(base_path).to_json,
+            open_search_rank(base_path, index, page_views).to_json,
           ]
         end
       end
@@ -18,11 +18,11 @@ module Analytics
 
       attr_reader :consolidated_data
 
-      def elastic_search_identifier(base_path)
+      def open_search_identifier(base_path)
         { _id: base_path }
       end
 
-      def elastic_search_rank(base_path, index, page_views)
+      def open_search_rank(base_path, index, page_views)
         {
           path_components: path_components(base_path),
           rank_14: index,

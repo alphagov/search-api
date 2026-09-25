@@ -1,5 +1,5 @@
 module Search
-  # Mixin for building elasticsearch queries
+  # Mixin for building opensearch queries
   module QueryHelpers
   private
 

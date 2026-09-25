@@ -9,7 +9,7 @@ module IntegrationTestHelper
     "document_type" => "edition",
   }.freeze
 
-  def self.allow_elasticsearch_connection_to_test(testing_url = nil)
+  def self.allow_opensearch_connection_to_test(testing_url = nil)
     allowed_hosts = Clusters.active.map(&:uri)
 
     allowed_paths = []
@@ -32,7 +32,7 @@ module IntegrationTestHelper
 
   def self.recreate_indices
     # Deleted documents can continue to affect Lucene's scoring statistics
-    # When testing elasticsearch boosting scores, recreating the indices is
+    # When testing opensearch boosting scores, recreating the indices is
     # usually necessary before the test ensures deterministic search scores.
     # https://www.elastic.co/guide/en/elasticsearch/reference/current/consistent-scoring.html
 
@@ -84,7 +84,7 @@ module IntegrationTestHelper
 
       next if hits.empty?
 
-      es_processor = Index::ElasticsearchProcessor.new(client: client(cluster:))
+      es_processor = Index::OpensearchProcessor.new(client: client(cluster:))
       hits.each do |hit|
         es_processor.delete(OpenStruct.new(identifier: { _index: index, _id: hit["_id"] }))
       end
@@ -116,7 +116,7 @@ module IntegrationTestHelper
   def client(cluster: Clusters.default_cluster)
     # Set a fairly long timeout to avoid timeouts on index creation on the CI
     # servers
-    Services.elasticsearch(cluster:, timeout: 10)
+    Services.opensearch(cluster:, timeout: 10)
   end
 
   def parsed_response

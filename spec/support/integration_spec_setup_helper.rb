@@ -35,7 +35,7 @@ module IntegrationSpecSetupHelper
   end
 
   def self.allow_connection_during_test
-    IntegrationTestHelper.allow_elasticsearch_connection_to_test
+    IntegrationTestHelper.allow_opensearch_connection_to_test
     yield
   ensure
     IntegrationTestHelper.disable_net_connections
