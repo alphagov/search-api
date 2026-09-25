@@ -2,9 +2,9 @@ module Search
   class AggregateExampleFetcher
     attr_reader :search_params
 
-    def initialize(index, es_response, search_params, query_builder)
+    def initialize(index, os_response, search_params, query_builder)
       @index = index
-      @response_aggregates = es_response["aggregations"]
+      @response_aggregates = os_response["aggregations"]
       @search_params = search_params
       @query_builder = query_builder
     end

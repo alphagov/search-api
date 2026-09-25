@@ -93,9 +93,9 @@ RSpec.describe Search::AggregateResultPresenter do
     }.merge(options)
   end
 
-  def presented_aggregates(es_response: {}, aggregates: {}, registries: {}, filters: [])
+  def presented_aggregates(os_response: {}, aggregates: {}, registries: {}, filters: [])
     described_class.new(
-      es_response,
+      os_response,
       Search::QueryParameters.new(
         start: 0,
         aggregate_name: :aggregates,
@@ -119,7 +119,7 @@ RSpec.describe Search::AggregateResultPresenter do
   context "results with aggregates" do
     before do
       @output = presented_aggregates(
-        es_response: sample_aggregate_data,
+        os_response: sample_aggregate_data,
         aggregates: { "organisations" => aggregate_params(1) },
       )
     end
@@ -160,7 +160,7 @@ RSpec.describe Search::AggregateResultPresenter do
   context "results with aggregates and a filter applied" do
     before do
       @output = presented_aggregates(
-        es_response: sample_aggregate_data,
+        os_response: sample_aggregate_data,
         aggregates: { "organisations" => aggregate_params(2) },
         filters: [text_filter("organisations", %w[hmrc])],
       )
@@ -204,7 +204,7 @@ RSpec.describe Search::AggregateResultPresenter do
   context "results with aggregates and a filter which matches nothing applied" do
     before do
       @output = presented_aggregates(
-        es_response: sample_aggregate_data,
+        os_response: sample_aggregate_data,
         aggregates: { "organisations" => aggregate_params(1) },
         filters: [text_filter("organisations", %w[hm-cheesemakers])],
       )
@@ -248,7 +248,7 @@ RSpec.describe Search::AggregateResultPresenter do
   context "results with aggregate counting only" do
     before do
       @output = presented_aggregates(
-        es_response: sample_aggregate_data,
+        os_response: sample_aggregate_data,
         aggregates: { "organisations" => aggregate_params(0) },
       )
     end
@@ -277,7 +277,7 @@ RSpec.describe Search::AggregateResultPresenter do
   context "results with aggregates sorted by ascending count" do
     before do
       @output = presented_aggregates(
-        es_response: sample_aggregate_data,
+        os_response: sample_aggregate_data,
         aggregates: { "organisations" => aggregate_params(10, order: [[:count, 1]]) },
         registries: { organisations: sample_org_registry },
       )
@@ -294,7 +294,7 @@ RSpec.describe Search::AggregateResultPresenter do
   context "results with aggregates sorted by descending count" do
     before do
       @output = presented_aggregates(
-        es_response: sample_aggregate_data,
+        os_response: sample_aggregate_data,
         aggregates: { "organisations" => aggregate_params(10, order: [[:count, -1]]) },
         registries: { organisations: sample_org_registry },
       )
@@ -311,7 +311,7 @@ RSpec.describe Search::AggregateResultPresenter do
   context "results with aggregates sorted by ascending slug" do
     before do
       @output = presented_aggregates(
-        es_response: sample_aggregate_data,
+        os_response: sample_aggregate_data,
         aggregates: { "organisations" => aggregate_params(10, order: [[:"value.slug", 1]]) },
         registries: { organisations: sample_org_registry },
       )
@@ -328,7 +328,7 @@ RSpec.describe Search::AggregateResultPresenter do
   context "results with aggregates sorted by ascending link" do
     before do
       @output = presented_aggregates(
-        es_response: sample_aggregate_data,
+        os_response: sample_aggregate_data,
         aggregates: { "organisations" => aggregate_params(10, order: [[:"value.link", 1]]) },
         registries: { organisations: sample_org_registry },
       )
@@ -345,7 +345,7 @@ RSpec.describe Search::AggregateResultPresenter do
   context "results with aggregates sorted by ascending title" do
     before do
       @output = presented_aggregates(
-        es_response: sample_aggregate_data,
+        os_response: sample_aggregate_data,
         aggregates: { "organisations" => aggregate_params(10, order: [[:"value.title", 1]]) },
         registries: { organisations: sample_org_registry },
       )
@@ -362,7 +362,7 @@ RSpec.describe Search::AggregateResultPresenter do
   context "results with aggregates and an org registry" do
     before do
       @output = presented_aggregates(
-        es_response: sample_aggregate_data_with_policy_areas,
+        os_response: sample_aggregate_data_with_policy_areas,
         aggregates: { "organisations" => aggregate_params(1), "policy_areas" => aggregate_params(1) },
         registries: { organisations: sample_org_registry },
       )
@@ -414,7 +414,7 @@ RSpec.describe Search::AggregateResultPresenter do
   context "results with aggregate examples" do
     before do
       @output = presented_aggregates(
-        es_response: sample_aggregate_data,
+        os_response: sample_aggregate_data,
         aggregates: { "organisations" => aggregate_params(1) },
         registries: { organisations: sample_org_registry },
       )

@@ -1,5 +1,5 @@
 module Search
-  SpellCheckPresenter = Struct.new(:es_response) do
+  SpellCheckPresenter = Struct.new(:os_response) do
     def present
       return [] unless any_suggestions?
 
@@ -15,7 +15,7 @@ module Search
   private
 
     def any_suggestions?
-      es_response["suggest"] && es_response["suggest"].any?
+      os_response["suggest"] && os_response["suggest"].any?
     end
 
     def highlighted_suggestions?
@@ -23,7 +23,7 @@ module Search
     end
 
     def suggestions
-      es_response["suggest"]["spelling_suggestions"].first["options"]
+      os_response["suggest"]["spelling_suggestions"].first["options"]
     end
   end
 end

@@ -83,9 +83,9 @@ module Search
     # the best bet should appear at.
     def fetch_bets
       analyzed_users_query = " #{@metasearch_index.analyzed_best_bet_query(@query)} "
-      es_response = @metasearch_index.raw_search(lookup_payload)
+      os_response = @metasearch_index.raw_search(lookup_payload)
 
-      es_response["hits"]["hits"].map { |hit|
+      os_response["hits"]["hits"].map { |hit|
         details = JSON.parse(Array(hit["_source"]["details"]).first)
         _bet_query, _, bet_type = hit["_id"].rpartition("-")
         stemmed_query_as_term = Array(hit["_source"]["stemmed_query_as_term"]).first
