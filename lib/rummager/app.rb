@@ -129,6 +129,7 @@ class Rummager < Sinatra::Application
   # For details, see docs/search-api.md
   ["/search.?:request_format?", "/api/search.?:request_format?"].each do |path|
     get path do
+      set_prometheus_labels("search")
       json_only
 
       query_params = parse_query_string(request.query_string)
