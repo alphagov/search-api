@@ -39,8 +39,8 @@ RSpec.describe "HealthcheckTest" do
   describe "#opensearch_connectivity check" do
     context "when opensearch CANNOT be connected to" do
       it "returns a critical status" do
-        es_source = ENV["OPENSEARCH_URI"] || "http://localhost:9200"
-        stub_request(:get, %r{#{es_source}/_cluster/health}).to_raise(Errno::ECONNREFUSED)
+        os_source = ENV["OPENSEARCH_URI"] || "http://localhost:9200"
+        stub_request(:get, %r{#{os_source}/_cluster/health}).to_raise(Errno::ECONNREFUSED)
 
         get "/healthcheck/ready"
 
