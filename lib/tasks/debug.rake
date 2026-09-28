@@ -14,7 +14,7 @@ namespace :debug do
     abort "Missing argument. Usage: rake debug:show_govuk_link[link]" if args.link.nil?
 
     index = SearchConfig.govuk_index_name
-    doc = Services.elasticsearch.get(index:, id: args.link)
+    doc = Services.opensearch.get(index:, id: args.link)
     doc.except("_source").each do |k, v|
       puts "#{k} => #{v}"
     end

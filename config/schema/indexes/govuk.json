@@ -1,5 +1,5 @@
 {
-  "elasticsearch_types": [
+  "opensearch_types": [
     "aaib_report",
     "ai_assurance_portfolio_technique",
     "algorithmic_transparency_record",

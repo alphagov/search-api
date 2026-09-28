@@ -38,12 +38,12 @@ relevant we think a result is to your query.
 
 ## What impacts document retrieval?
 
-Out of the box, Elasticsearch comes with a decent scoring algorithm.
+Out of the box, Opensearch comes with a decent scoring algorithm.
 They have a [guide on scoring relevancy][scoring] which is worth
 reading.
 
 We've done some work in Search API to [tune relevancy][relevancy],
-overriding the default Elasticsearch behaviour, which we go into
+overriding the default Opensearch behaviour, which we go into
 below.
 
 These following factors are combined into a single `es_score`. The
@@ -125,7 +125,7 @@ results for a given query.
 Best bets used to be managed with the [Search Admin][] application,
 until that functionality was removed in https://github.com/alphagov/search-admin/pull/1174.
 There is currently no support for managing best bets without directly
-interacting with elasticsearch. This is known tech debt.
+interacting with opensearch. This is known tech debt.
 
 Example best bets:
 
@@ -145,10 +145,10 @@ Best and worst bets are implemented in the [best_bets.rb][] file.
 
 Stopwords are words like "is", "and", "an", and "a".  They're words we
 filter out when processing a search query, since they're so common
-they're not useful.  They also enable Elasticsearch to maintain a
+they're not useful.  They also enable Opensearch to maintain a
 smaller index.
 
-The stopwords themselves are provided by Elasticsearch.  There's
+The stopwords themselves are provided by Opensearch.  There's
 nothing in the Search API repo that looks at a list of omitted terms.
 This is handled by the default [stop token filter][].
 
@@ -157,12 +157,12 @@ This is handled by the default [stop token filter][].
 There has been some talk of not including stopwords in the past
 ([0fe6e52][], May 2015) during this time a `no_stop` method was
 implemented that seems to prevent stopwords from being used.  Again this
-seems to be served by Elasticsearch because it's not defined in Search
+seems to be served by Opensearch because it's not defined in Search
 API.
 
 **Potential improvements to stopwords**
 
-Given that we're taking a stock list of stopwords from Elasticsearch,
+Given that we're taking a stock list of stopwords from Opensearch,
 we may be missing out on a chance to edit them in a way that might be
 more useful for users. Looking into what words to omit / not omit might
 be a useful tuning exercise.
@@ -185,7 +185,7 @@ We use synonyms to show relevant results related to "vehicle tax" regardless
 of whether you searched for "car tax" or "auto tax".
 
 Synonyms are defined in the [synonyms.yml][] file and are applied to
-the Elasticsearch index configuration in the [schema_config.rb][]
+the Opensearch index configuration in the [schema_config.rb][]
 file.
 
 #### Grouping of synonyms
@@ -222,9 +222,9 @@ terms are mapped to the same single value that exists in the index.
 
 ### Filtering
 
-Additional configuration is defined in the [elasticsearch_schema.yml][] and
+Additional configuration is defined in the [opensearch_schema.yml][] and
 [stems.yml][] files.  This configuration is merged with the JSON
-configuration, and then passed to Elasticsearch directly.
+configuration, and then passed to Opensearch directly.
 
 [This blog post][synonyms-blog] suggests that as well as using
 keywords, it can be useful to use "keepwords" to only filter the
@@ -240,7 +240,7 @@ them with synonyms, then cull out any non-synonyms with keepwords.
 
 We use parts of a document differently when processing a search query.
 
-We do some categorisation of document fields, to tell Elasticsearch what
+We do some categorisation of document fields, to tell Opensearch what
 we can use them for.
 
 For example `date` is used for date fields which can be returned and used
@@ -248,7 +248,7 @@ for ordering, filtering and aggregating. This lets you filter e.g.
 `filter_public_timestamp=from:2015-01-01`.
 
 There are also fields like `acronym` which is categorised as a
-`searchable_text` type that Elasticsearch looks at when you submit a keyword
+`searchable_text` type that Opensearch looks at when you submit a keyword
 search. So you can search for `MOD` and get a link to that organisation as
 the top result.
 
@@ -259,7 +259,7 @@ These are configured in [`config/schema/field_types.json`](https://github.com/al
 
 We have a number of custom analyzers that can be invoked at index time or when querying.
 
-From the [Elasticsearch documentation][analyzer] on analyzers:
+From the [Opensearch documentation][analyzer] on analyzers:
 
 > The values of analyzed string fields are passed through an analyzer
 > to convert the string into a stream of tokens or terms.  For
@@ -330,7 +330,7 @@ These are the steps, ignoring asciifolding, which have been added:
 
 2. Split into tokens (tokenizer)
 
-   We use the default Elasticsearch tokeniser (`tokenizer: standard`).
+   We use the default Opensearch tokeniser (`tokenizer: standard`).
 
    The standard tokeniser uses the unicode text segmentation algorithm.
    https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-standard-tokenizer.html
@@ -369,7 +369,7 @@ These non-indexed paths and formats are defined in [`config/govuk_index/allowed_
 ### Debugging es_score
 
 If you want to understand why a result has a given `es_score`, you can
-use the Elasticsearch [Explain API][explain].  This is exposed by the
+use the Opensearch [Explain API][explain].  This is exposed by the
 Search API.
 
 Please note that `es_score` is just one feature used by the reranking
@@ -384,10 +384,10 @@ potter"][explain-example].  This shows an example of stemming, where
 "harry" becomes "harri".  This is due to the rule "replace suffix 'y'
 or 'Y' by 'i' if preceded by a non-vowel which is not the first letter
 of the word".  You can also see that text similarity scoring ([BM25][]
-in Elasticsearch 6) works by considering both term frequency and
+in Opensearch) works by considering both term frequency and
 document frequency.
 
-You can see the query Search API sends to Elasticsearch with the
+You can see the query Search API sends to Opensearch with the
 `debug=show_query` parameter.  Debug parameters can be combined, like
 `debug=show_query,explain`.  The debug output is verbose, so sometimes
 restricting to only a handful of results, with `count=0` or `count=1`,

@@ -2,7 +2,7 @@ require "spec_helper"
 
 RSpec.describe Search::BaseRegistry do
   before do
-    @index = double("elasticsearch index")
+    @index = double("opensearch index")
     @base_registry = described_class.new(@index, sample_field_definitions, "example-format")
   end
 

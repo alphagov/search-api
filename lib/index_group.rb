@@ -10,10 +10,10 @@ module SearchIndices
   class IndexGroup
     def initialize(base_uri, name, schema, search_config)
       @base_uri = base_uri
-      @client = Services.elasticsearch(hosts: base_uri)
+      @client = Services.opensearch(hosts: base_uri)
       # Index creation/deletion can take longer than other requests, so create a separate
       # client with a longer timeout
-      @long_timeout_client = Services.elasticsearch(hosts: base_uri, timeout: 30)
+      @long_timeout_client = Services.opensearch(hosts: base_uri, timeout: 30)
       @name = name
       @schema = schema
       @search_config = search_config
@@ -50,7 +50,7 @@ module SearchIndices
         indices = {}
       end
       # Bail if there is an existing index with this name.
-      # elasticsearch won't allow us to add an alias with the same name as an
+      # opensearch won't allow us to add an alias with the same name as an
       # existing index. If such an index exists, it hasn't yet been migrated to
       # the new alias-y way of doing things.
       if indices.include? @name
@@ -127,15 +127,15 @@ module SearchIndices
     end
 
     def settings
-      @settings ||= @schema.elasticsearch_settings(@name)
+      @settings ||= @schema.opensearch_settings(@name)
     end
 
     def mappings
-      @mappings ||= @schema.elasticsearch_mappings(@name)
+      @mappings ||= @schema.opensearch_mappings(@name)
     end
 
     def generate_name
-      # elasticsearch requires that all index names be lower case and
+      # opensearch requires that all index names be lower case and
       # doesn't allow colons
       "#{@name}-#{Time.now.utc.iso8601}-#{SecureRandom.uuid}".downcase.gsub(/:/, "-")
     end

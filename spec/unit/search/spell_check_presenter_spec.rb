@@ -2,8 +2,8 @@ require "spec_helper"
 
 RSpec.describe Search::SpellCheckPresenter do
   context "#present" do
-    it "parse the elasticsearch response and return suggestions" do
-      es_response = {
+    it "parse the opensearch response and return suggestions" do
+      os_response = {
         "suggest" => {
           "spelling_suggestions" => [{
             "text" => "some query",
@@ -19,13 +19,13 @@ RSpec.describe Search::SpellCheckPresenter do
         },
       }
 
-      presenter = described_class.new(es_response)
+      presenter = described_class.new(os_response)
 
       expect(presenter.present).to eq(["the first suggestion", "the second suggestion"])
     end
 
     it "includes the highlighted suggestion if given" do
-      es_response = {
+      os_response = {
         "suggest" => {
           "spelling_suggestions" => [{
             "text" => "a highlighte suggestion",
@@ -38,7 +38,7 @@ RSpec.describe Search::SpellCheckPresenter do
         },
       }
 
-      presenter = described_class.new(es_response)
+      presenter = described_class.new(os_response)
 
       expect(presenter.present).to eq([{ text: "a highlighted suggestion", highlighted: "a <mark>highlighted</mark> suggestion" }])
     end

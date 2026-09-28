@@ -21,9 +21,9 @@ module Search
       builder = builder_payload[:builder]
       payload = builder_payload[:payload]
 
-      es_response = index.raw_search(payload)
+      os_response = index.raw_search(payload)
 
-      process_es_response(search_params, builder, payload, es_response)
+      process_os_response(search_params, builder, payload, os_response)
     end
 
   private
@@ -42,17 +42,17 @@ module Search
       { builder:, payload: builder.payload }
     end
 
-    def process_es_response(search_params, builder, payload, es_response)
+    def process_os_response(search_params, builder, payload, os_response)
       # Augment the response with the suggest result from a separate query.
       if search_params.suggest_autocomplete?
-        es_response["autocomplete"] = run_autocomplete_query(search_params)
+        os_response["autocomplete"] = run_autocomplete_query(search_params)
       end
 
-      presented_aggregates = present_aggregates_with_examples(search_params, es_response, builder)
+      presented_aggregates = present_aggregates_with_examples(search_params, os_response, builder)
 
       ResultSetPresenter.new(
         search_params:,
-        es_response:,
+        os_response:,
         registries:,
         presented_aggregates:,
         schema: index.schema,
@@ -60,9 +60,9 @@ module Search
       ).present
     end
 
-    def present_aggregates_with_examples(search_params, es_response, builder)
+    def present_aggregates_with_examples(search_params, os_response, builder)
       presented_aggregates = AggregateResultPresenter.new(
-        es_response["aggregations"],
+        os_response["aggregations"],
         search_params,
         registries,
       ).presented_aggregates
@@ -74,7 +74,7 @@ module Search
         acc
       end
 
-      example_fetcher = AggregateExampleFetcher.new(index, es_response, search_params, builder)
+      example_fetcher = AggregateExampleFetcher.new(index, os_response, search_params, builder)
       examples = example_fetcher.fetch(slugs_for_fields)
       AggregateResultPresenter.merge_examples(presented_aggregates, examples)
 

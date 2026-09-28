@@ -141,7 +141,7 @@ private
     normalizer = UNF::Normalizer.instance
     begin
       # Put strings into NFKC-normal form to ensure that accent handling works
-      # correctly in elasticsearch.
+      # correctly in opensearch.
       normalizer.normalize(string, :nfkc).strip
     rescue ArgumentError
       @errors << %(Invalid unicode in #{description})
@@ -168,7 +168,7 @@ private
     [SORT_MAPPINGS.fetch(field, field), dir]
   end
 
-  # Get a list of the fields to request in results from elasticsearch
+  # Get a list of the fields to request in results from opensearch
   def return_fields
     fields = character_separated_param("fields")
     if fields.empty?

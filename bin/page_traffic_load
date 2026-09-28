@@ -3,7 +3,7 @@
 # Usage: #{File.basename(__FILE__)}
 #
 # Bulk loads data from stdin to the page traffic index. The data should be in the
-# format accepted by the elastic search bulk command[1].
+# format accepted by the open search bulk command[1].
 #
 # Loading is done in an unconnected index alias and on completion of the index
 # load the alias is switched over.
