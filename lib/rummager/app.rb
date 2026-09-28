@@ -129,6 +129,7 @@ class Rummager < Sinatra::Application
   # For details, see docs/search-api.md
   ["/search.?:request_format?", "/api/search.?:request_format?"].each do |path|
     get path do
+      set_prometheus_labels("search")
       json_only
 
       query_params = parse_query_string(request.query_string)
@@ -146,6 +147,7 @@ class Rummager < Sinatra::Application
   end
 
   post "/v2/metasearch/documents" do
+    set_prometheus_labels("metasearch_documents")
     require_authentication "manage_search_indices"
     document = JSON.parse(request.body.read)
 
@@ -156,6 +158,7 @@ class Rummager < Sinatra::Application
   end
 
   delete "/v2/metasearch/documents/*" do
+    set_prometheus_labels("metasearch_documents")
     require_authentication "manage_search_indices"
     id = params["splat"].first
 
@@ -166,6 +169,7 @@ class Rummager < Sinatra::Application
   end
 
   get "/_status" do
+    set_prometheus_labels("status")
     status = {}
     status["queues"] = {}
 
@@ -185,10 +189,12 @@ class Rummager < Sinatra::Application
   end
 
   get "/healthcheck/live" do
+    set_prometheus_labels("healthcheck_live")
     [200, { "Content-Type" => "text/plain" }, "OK"]
   end
 
   get "/healthcheck/ready" do
+    set_prometheus_labels("healthcheck_ready")
     GovukHealthcheck.rack_response(
       GovukHealthcheck::SidekiqRedis,
       Healthcheck::OpensearchConnectivityCheck,
@@ -196,11 +202,21 @@ class Rummager < Sinatra::Application
   end
 
   get "/sitemap.xml" do
+    set_prometheus_labels("sitemap")
     serve_from_s3("sitemap.xml")
   end
 
   get "/sitemaps/:sitemap" do |sitemap|
+    set_prometheus_labels("sitemap")
     serve_from_s3(sitemap)
+  end
+
+  def set_prometheus_labels(endpoint)
+    prometheus_labels = request.env.fetch("govuk.prometheus_labels", {})
+
+    request.env["govuk.prometheus_labels"] = prometheus_labels.merge(
+      search_api_endpoint: endpoint,
+    )
   end
 
   def serve_from_s3(key)
