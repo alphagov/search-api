@@ -34,7 +34,7 @@ module Index
 
     def client(cluster: Clusters.default_cluster)
       @_client ||= {}
-      @_client[cluster.key] ||= Services.elasticsearch(
+      @_client[cluster.key] ||= Services.opensearch(
         cluster:,
         timeout: @_options[:timeout] || TIMEOUT_SECONDS,
         retry_on_failure: true,

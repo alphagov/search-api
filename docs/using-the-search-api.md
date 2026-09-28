@@ -1,6 +1,6 @@
 # Using the search API
 
-Search API is publicly accessible at <https://www.gov.uk/api/search.json>, and responds to different URL parameters, explained below. Parameters are strictly validated: if Search API encounters any unknown parameters (or known parameters but with invalid values) it returns a HTTP 422 error. It parses the query, constructs an Elasticsearch query, and then retrieves documents from Elasticsearch: this way, other applications in the GOV.UK stack don't need to know how to construct Elasticsearch queries.
+Search API is publicly accessible at <https://www.gov.uk/api/search.json>, and responds to different URL parameters, explained below. Parameters are strictly validated: if Search API encounters any unknown parameters (or known parameters but with invalid values) it returns a HTTP 422 error. It parses the query, constructs an Opensearch query, and then retrieves documents from Opensearch: this way, other applications in the GOV.UK stack don't need to know how to construct Opensearch queries.
 
 ## Examples
 

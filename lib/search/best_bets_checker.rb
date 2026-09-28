@@ -70,7 +70,7 @@ module Search
       ]
     end
 
-    # Fetch bet information from elasticsearch
+    # Fetch bet information from opensearch
     #
     # Returns an array of 4-tuples, holding:
     #  - query the bet was for
@@ -83,9 +83,9 @@ module Search
     # the best bet should appear at.
     def fetch_bets
       analyzed_users_query = " #{@metasearch_index.analyzed_best_bet_query(@query)} "
-      es_response = @metasearch_index.raw_search(lookup_payload)
+      os_response = @metasearch_index.raw_search(lookup_payload)
 
-      es_response["hits"]["hits"].map { |hit|
+      os_response["hits"]["hits"].map { |hit|
         details = JSON.parse(Array(hit["_source"]["details"]).first)
         _bet_query, _, bet_type = hit["_id"].rpartition("-")
         stemmed_query_as_term = Array(hit["_source"]["stemmed_query_as_term"]).first
@@ -112,7 +112,7 @@ module Search
     # it's a good idea to avoid risking having to deal with huge numbers of
     # returned bets.
     #
-    # It's not possible to build an elasticsearch query against the stemmed_query
+    # It's not possible to build an opensearch query against the stemmed_query
     # field which only returns results where the entire stemmed_query field value
     # occurs as a phrase in the user's query.  Instead, we do an OR query to
     # obtain a set of candidates which match that field, and use the

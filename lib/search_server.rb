@@ -30,7 +30,7 @@ module SearchIndices
       return if index_name_valid?(index_name)
 
       raise NoSuchIndex,
-            "Index name #{index_name} is not specified in the elasticsearch settings."
+            "Index name #{index_name} is not specified in the opensearch settings."
     end
 
     def index_name_valid?(index_name)

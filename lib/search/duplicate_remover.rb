@@ -37,7 +37,7 @@ module Search
     end
 
     def delete_document(link)
-      Services.elasticsearch.delete_by_query(
+      Services.opensearch.delete_by_query(
         index: SearchConfig.govuk_index_name,
         body: { query: { term: { link: link } } },
       )
