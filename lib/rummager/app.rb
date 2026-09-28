@@ -147,6 +147,7 @@ class Rummager < Sinatra::Application
   end
 
   post "/v2/metasearch/documents" do
+    set_prometheus_labels("metasearch_documents")
     require_authentication "manage_search_indices"
     document = JSON.parse(request.body.read)
 
@@ -157,6 +158,7 @@ class Rummager < Sinatra::Application
   end
 
   delete "/v2/metasearch/documents/*" do
+    set_prometheus_labels("metasearch_documents")
     require_authentication "manage_search_indices"
     id = params["splat"].first
 
