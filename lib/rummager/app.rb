@@ -189,10 +189,12 @@ class Rummager < Sinatra::Application
   end
 
   get "/healthcheck/live" do
+    set_prometheus_labels("healthcheck_live")
     [200, { "Content-Type" => "text/plain" }, "OK"]
   end
 
   get "/healthcheck/ready" do
+    set_prometheus_labels("healthcheck_ready")
     GovukHealthcheck.rack_response(
       GovukHealthcheck::SidekiqRedis,
       Healthcheck::ElasticsearchConnectivityCheck,

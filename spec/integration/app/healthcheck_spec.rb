@@ -19,43 +19,55 @@ RSpec.describe "HealthcheckTest" do
       expect(last_response.headers["Content-Type"]).to eq("text/plain")
       expect(last_response.body).to eq("OK")
     end
-  end
 
-  describe "#redis_connectivity check" do
-    # We only check for cannot connect because govuk_app_config has tests for this
-    context "when Sidekiq CANNOT connect to Redis" do
-      before do
-        allow(Sidekiq.default_configuration).to receive(:redis_info).and_raise(Errno::ECONNREFUSED)
-      end
-
-      it "returns a critical status" do
-        get "/healthcheck/ready"
-
-        expect(parsed_response["status"]).to eq "critical"
-      end
+    it "sets endpoint as a prometheus label" do
+      get "/healthcheck/live"
+      expect(last_request.env["govuk.prometheus_labels"][:search_api_endpoint]).to eq("healthcheck_live")
     end
   end
 
-  describe "#elasticsearch_connectivity check" do
-    context "when elasticsearch CANNOT be connected to" do
-      it "returns a critical status" do
-        es_source = ENV["ELASTICSEARCH_URI"] || "http://localhost:9200"
-        stub_request(:get, %r{#{es_source}/_cluster/health}).to_raise(Errno::ECONNREFUSED)
+  describe "ready check" do
+    it "sets endpoint as a prometheus label" do
+      get "/healthcheck/ready"
+      expect(last_request.env["govuk.prometheus_labels"][:search_api_endpoint]).to eq("healthcheck_ready")
+    end
 
-        get "/healthcheck/ready"
+    describe "#redis_connectivity check" do
+      # We only check for cannot connect because govuk_app_config has tests for this
+      context "when Sidekiq CANNOT connect to Redis" do
+        before do
+          allow(Sidekiq.default_configuration).to receive(:redis_info).and_raise(Errno::ECONNREFUSED)
+        end
 
-        expect(parsed_response["status"]).to eq "critical"
-        expect(parsed_response.dig("checks", "elasticsearch_connectivity", "status")).to eq "critical"
-        expect(parsed_response.dig("checks", "elasticsearch_connectivity", "message")).to eq "search-api cannot connect to 1 elasticsearch cluster! \n Failing: A"
+        it "returns a critical status" do
+          get "/healthcheck/ready"
+
+          expect(parsed_response["status"]).to eq "critical"
+        end
       end
     end
 
-    context "when elasticsearch CAN be connected to" do
-      it "returns an OK status" do
-        get "/healthcheck/ready"
+    describe "#elasticsearch_connectivity check" do
+      context "when elasticsearch CANNOT be connected to" do
+        it "returns a critical status" do
+          es_source = ENV["ELASTICSEARCH_URI"] || "http://localhost:9200"
+          stub_request(:get, %r{#{es_source}/_cluster/health}).to_raise(Errno::ECONNREFUSED)
 
-        expect(parsed_response["status"]).to eq "ok"
-        expect(parsed_response.dig("checks", "elasticsearch_connectivity", "status")).to eq "ok"
+          get "/healthcheck/ready"
+
+          expect(parsed_response["status"]).to eq "critical"
+          expect(parsed_response.dig("checks", "elasticsearch_connectivity", "status")).to eq "critical"
+          expect(parsed_response.dig("checks", "elasticsearch_connectivity", "message")).to eq "search-api cannot connect to 1 elasticsearch cluster! \n Failing: A"
+        end
+      end
+
+      context "when elasticsearch CAN be connected to" do
+        it "returns an OK status" do
+          get "/healthcheck/ready"
+
+          expect(parsed_response["status"]).to eq "ok"
+          expect(parsed_response.dig("checks", "elasticsearch_connectivity", "status")).to eq "ok"
+        end
       end
     end
   end
