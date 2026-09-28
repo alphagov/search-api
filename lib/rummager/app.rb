@@ -169,6 +169,7 @@ class Rummager < Sinatra::Application
   end
 
   get "/_status" do
+    set_prometheus_labels("status")
     status = {}
     status["queues"] = {}
 

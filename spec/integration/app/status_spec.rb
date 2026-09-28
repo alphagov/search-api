@@ -64,4 +64,9 @@ RSpec.describe "StatusTest" do
     expect(last_response).to be_ok
     expect(parsed_response["queues"]["bulk"]["scheduled"]).to eq(0)
   end
+
+  it "sets endpoint as a prometheus label" do
+    get "/_status"
+    expect(last_request.env["govuk.prometheus_labels"][:search_api_endpoint]).to eq("status")
+  end
 end
