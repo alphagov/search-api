@@ -40,7 +40,7 @@ module Collectors
       when "yellow" then 1
       when "red"    then 2
       else 3 # Can be 'unknown' or 'unavailable' in rare cases according to the docs:
-        # https://www.elastic.co/docs/api/doc/elasticsearch/operation/operation-cluster-health
+        # https://docs.opensearch.org/latest/api-reference/cluster-api/cluster-health/
       end
     end
   end

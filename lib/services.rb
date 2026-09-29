@@ -22,7 +22,7 @@ module Services
 
   # Build a client to connect to one or more opensearch nodes.
   # hosts should be a comma separated string. Valid formats
-  # are documented at http://www.rubydoc.info/gems/elasticsearch-transport#Setting_Hosts
+  # are documented at http://www.rubydoc.info/gems/opensearch-transport#Setting_Hosts
   #
   # Be careful when setting a short timeout value. You may see confusing HTTP
   # 4XX responses rather than timeout errors because the Opensearch client

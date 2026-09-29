@@ -7,7 +7,7 @@ index:
       analyzer:
         # At index time, opensearch will use an analyzer named default in the index settings
         # if no analyzer is specified in the field mapping:
-        # https://www.elastic.co/guide/en/elasticsearch/reference/current/analyzer.html
+        # https://docs.opensearch.org/latest/analyzers/
         #
         # We don't need this at query time unless synonyms are disabled
         # using a debug flag.
