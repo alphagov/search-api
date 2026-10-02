@@ -39,6 +39,9 @@ require "gds_api/middleware/govuk_header_sniffer"
 use GdsApi::GovukHeaderSniffer, "HTTP_GOVUK_REQUEST_ID"
 use GdsApi::GovukHeaderSniffer, "HTTP_GOVUK_ORIGINAL_URL"
 
+require_relative "lib/middleware/catch_multipart_errors"
+use Middleware::CatchMultipartErrors
+
 enable :dump_errors, :raise_errors
 
 run Rummager
