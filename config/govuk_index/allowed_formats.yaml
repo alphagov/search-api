@@ -403,6 +403,7 @@ disallowed_formats:
   - '/tour'
   - '/help/ab-testing'
   - '/help.json'
+  - '/latest'
   - '/random'
   # from whitehall
   - "/BingSiteAuth.xml"
