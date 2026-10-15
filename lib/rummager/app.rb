@@ -206,9 +206,12 @@ class Rummager < Sinatra::Application
     serve_from_s3("sitemap.xml")
   end
 
-  get "/sitemaps/:sitemap" do |sitemap|
+  get "/sitemaps/:sitemap" do |sitemap_key|
+    sitemap_regex = /sitemap_\d+\.xml$/
+    halt 400 unless sitemap_key.match?(sitemap_regex)
+
     set_prometheus_labels("sitemap")
-    serve_from_s3(sitemap)
+    serve_from_s3(sitemap_key)
   end
 
   def set_prometheus_labels(endpoint)
