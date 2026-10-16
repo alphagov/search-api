@@ -77,6 +77,13 @@ class Rummager < Sinatra::Application
     end
   end
 
+  def xml_only(request_format = nil)
+    unless %w[xml].include?(request_format)
+      expires 86_400, :public
+      halt 400
+    end
+  end
+
   helpers do
     include Helpers
   end
@@ -206,12 +213,17 @@ class Rummager < Sinatra::Application
     serve_from_s3("sitemap.xml")
   end
 
-  get "/sitemaps/:sitemap" do |sitemap_key|
-    sitemap_regex = /sitemap_\d+\.xml$/
-    halt 400 unless sitemap_key.match?(sitemap_regex)
-
+  get "/sitemaps/:sitemap" do |sitemap|
     set_prometheus_labels("sitemap")
-    serve_from_s3(sitemap_key)
+
+    match = sitemap.match(/\.(?<format>.*)$/)
+    halt 400 unless match
+    xml_only(match[:format])
+
+    sitemap_regex = /sitemap_\d+\.xml$/
+    halt 404 unless sitemap.match?(sitemap_regex)
+
+    serve_from_s3(sitemap)
   end
 
   def set_prometheus_labels(endpoint)
