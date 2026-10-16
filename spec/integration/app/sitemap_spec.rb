@@ -67,20 +67,30 @@ RSpec.describe "SitemapTest", type: :request do
       end
     end
 
-    context "when key is well formed but invalid" do
-      it "cannot find the sitemap" do
-        get "/sitemaps/sitemap_30000.xml"
+    context "when the key is invalid" do
+      it "halts and returns a 404" do
+        bad_keys = ["sitemap.xml", "sitemap_index.xml"]
 
+        bad_keys.each do |key|
+          get "/sitemaps/#{key}"
+          expect(last_response.status).to eq(404)
+        end
+      end
+    end
+
+    context "when the key is valid but it cannot find the sitemap" do
+      it "returns a 404" do
+        get "/sitemaps/sitemap_30000.xml"
         expect(last_response.status).to eq(404)
         expect(last_response.body).to eq("No such object")
       end
     end
 
-    context "when key is badly formed" do
+    context "when the request is not an xml format" do
       it "halts and returns a 400" do
-        bad_keys = ["anything.xml", "sitemap_1.xmlxEB", "soap"]
+        bad_formats = ["sitemap.json", "sitemap_1.xmlxEB", "soap"]
 
-        bad_keys.each do |key|
+        bad_formats.each do |key|
           get "/sitemaps/#{key}"
           expect(last_response.status).to eq(400)
         end
