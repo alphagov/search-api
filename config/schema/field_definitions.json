@@ -1247,6 +1247,12 @@
   "patent_decision_application_patent_number": {
     "type": "searchable_identifier"
   },
+  "patent_decision_application_number": {
+    "type": "searchable_identifier"
+  },
+  "patent_decision_publication_number": {
+    "type": "searchable_identifier"
+  },
   "patent_decision_date_of_issue": {
     "type": "date"
   },

@@ -117,6 +117,8 @@ module GovukIndex
     delegate_to_payload :patent_decision_hearing_officer
     delegate_to_payload :patent_decision_type_of_hearing
     delegate_to_payload :patent_decision_application_patent_number
+    delegate_to_payload :patent_decision_application_number
+    delegate_to_payload :patent_decision_publication_number
     delegate_to_payload :patent_decision_date_of_issue
     delegate_to_payload :patent_decision_persons_or_companies_involved
     delegate_to_payload :patent_decision_provisions_discussed

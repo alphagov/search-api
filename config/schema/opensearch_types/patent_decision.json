@@ -4,6 +4,8 @@
     "patent_decision_hearing_officer",
     "patent_decision_type_of_hearing",
     "patent_decision_application_patent_number",
+    "patent_decision_application_number",
+    "patent_decision_publication_number",
     "patent_decision_date_of_issue",
     "patent_decision_persons_or_companies_involved",
     "patent_decision_provisions_discussed",
