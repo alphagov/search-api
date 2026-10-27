@@ -1244,9 +1244,6 @@
   "patent_decision_type_of_hearing": {
     "type": "identifiers"
   },
-  "patent_decision_application_patent_number": {
-    "type": "searchable_identifier"
-  },
   "patent_decision_application_number": {
     "type": "searchable_identifier"
   },

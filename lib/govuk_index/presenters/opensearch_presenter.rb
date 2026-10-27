@@ -173,7 +173,6 @@ module GovukIndex
         parent_organisations: expanded_links.parent_organisations,
         part_of_taxonomy_tree: expanded_links.part_of_taxonomy_tree,
         parts: parts.presented_parts,
-        patent_decision_application_patent_number: specialist.patent_decision_application_patent_number,
         patent_decision_application_number: specialist.patent_decision_application_number,
         patent_decision_publication_number: specialist.patent_decision_publication_number,
         patent_decision_british_library_number: specialist.patent_decision_british_library_number,
