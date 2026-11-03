@@ -49,7 +49,21 @@ RSpec.describe "ErrorHandlingTest" do
   include_examples(
     "a sinatra error handler",
     exception_class: OpenSearch::Transport::Transport::Errors::BadRequest,
-    status: 400,
+    status: 500,
+    body: ->(msg) { msg },
+  )
+
+  include_examples(
+    "a sinatra error handler",
+    exception_class: OpenSearch::Transport::Transport::Errors::InternalServerError,
+    status: 500,
+    body: ->(msg) { msg },
+  )
+
+  include_examples(
+    "a sinatra error handler",
+    exception_class: ArgumentError,
+    status: 500,
     body: ->(msg) { msg },
   )
 

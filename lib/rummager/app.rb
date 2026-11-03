@@ -105,11 +105,11 @@ class Rummager < Sinatra::Application
   end
 
   error OpenSearch::Transport::Transport::Errors::BadRequest do
-    halt(400, env["sinatra.error"].message)
+    halt(500, env["sinatra.error"].message)
   end
 
   error OpenSearch::Transport::Transport::Errors::InternalServerError do
-    halt(400, env["sinatra.error"].message)
+    halt(500, env["sinatra.error"].message)
   end
 
   error Index::ResponseValidator::OpensearchError do
@@ -124,7 +124,7 @@ class Rummager < Sinatra::Application
   end
 
   error ArgumentError do
-    halt(400, env["sinatra.error"].message)
+    halt(500, env["sinatra.error"].message)
   end
 
   error Index::ResponseValidator::NotFound do
