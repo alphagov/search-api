@@ -251,9 +251,9 @@ GEM
     logstasher (3.0.0)
       activesupport (>= 7.0)
       request_store
-    loofah (2.25.2)
+    loofah (2.25.3)
       crass (~> 1.0.2)
-      nokogiri (>= 1.12.0)
+      nokogiri (>= 1.19.5)
     method_source (1.1.0)
     mime-types (3.7.0)
       logger
@@ -284,7 +284,7 @@ GEM
       timeout
     netrc (0.11.0)
     nio4r (2.7.5)
-    nokogiri (1.19.4)
+    nokogiri (1.19.7)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
     null_logger (0.0.1)
