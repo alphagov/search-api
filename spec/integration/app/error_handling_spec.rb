@@ -53,6 +53,20 @@ RSpec.describe "ErrorHandlingTest" do
     body: ->(msg) { msg },
   )
 
+  include_examples(
+    "a sinatra error handler",
+    exception_class: OpenSearch::Transport::Transport::Errors::InternalServerError,
+    status: 500,
+    body: ->(msg) { msg },
+  )
+
+  include_examples(
+    "a sinatra error handler",
+    exception_class: ArgumentError,
+    status: 500,
+    body: ->(msg) { msg },
+  )
+
   it "notifies GovukError with the exception and params" do
     error = Index::ResponseValidator::OpensearchError.new("error")
 
