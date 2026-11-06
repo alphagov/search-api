@@ -11,6 +11,16 @@ RSpec.describe "SearchTest" do
     expect(last_response).to be_ok
   end
 
+  ["/search", "/api/search"].each do |path|
+    it "sets a five-minute public cache policy for #{path}" do
+      get "#{path}?q=important"
+
+      expect(last_response.headers["Cache-Control"]).to include("public")
+      expect(last_response.headers["Cache-Control"]).to include("max-age=300")
+      expect(last_response.headers["Expires"]).not_to be_nil
+    end
+  end
+
   it "sets endpoint as a prometheus label" do
     get "/search?q=important"
     expect(last_request.env["govuk.prometheus_labels"][:search_api_endpoint]).to eq("search")

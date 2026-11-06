@@ -139,6 +139,8 @@ class Rummager < Sinatra::Application
       set_prometheus_labels("search")
       json_only
 
+      expires 300, :public
+
       query_params = parse_query_string(request.query_string)
 
       begin
