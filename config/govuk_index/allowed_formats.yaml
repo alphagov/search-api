@@ -94,7 +94,6 @@ allowed_formats:
   - /world/australia
   - /world/austria
   - /world/azerbaijan
-  - /world/bahamas
   - /world/bahrain
   - /world/bangladesh
   - /world/barbados
@@ -282,6 +281,7 @@ allowed_formats:
   - /world/tajikistan
   - /world/tanzania
   - /world/thailand
+  - /world/the-bahamas
   - /world/the-gambia
   - /world/timor-leste
   - /world/togo
