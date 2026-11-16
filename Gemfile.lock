@@ -768,6 +768,7 @@ DEPENDENCIES
   govuk_message_queue_consumer
   govuk_schemas
   govuk_sidekiq
+  grpc (>= 1.85)
   logging
   loofah
   mr-sparkle
