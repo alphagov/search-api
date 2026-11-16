@@ -100,6 +100,14 @@ class Rummager < Sinatra::Application
     halt(503, "Opensearch timed out")
   end
 
+  error Faraday::TimeoutError do
+    halt(503, "Faraday timed out")
+  end
+
+  error Faraday::ConnectionFailed do
+    halt(503, "Faraday is unable to connect")
+  end
+
   error RedisClient::TimeoutError do
     halt(503, "Redis queue timed out")
   end
