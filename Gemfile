@@ -13,6 +13,7 @@ gem "govuk_document_types"
 gem "govuk_message_queue_consumer"
 gem "govuk_schemas"
 gem "govuk_sidekiq"
+gem "grpc", ">= 1.85" # Minimum version for cert chain vulnerability fix
 gem "logging"
 gem "loofah"
 gem "nokogiri"
