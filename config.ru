@@ -42,6 +42,4 @@ use GdsApi::GovukHeaderSniffer, "HTTP_GOVUK_ORIGINAL_URL"
 require_relative "lib/middleware/sitemap_bot_blocker"
 use Middleware::SitemapBotBlocker
 
-enable :dump_errors, :raise_errors
-
 run Rummager
