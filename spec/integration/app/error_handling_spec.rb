@@ -41,6 +41,20 @@ RSpec.describe "ErrorHandlingTest" do
 
   include_examples(
     "a sinatra error handler",
+    exception_class: Faraday::TimeoutError,
+    status: 503,
+    body: "Faraday timed out",
+  )
+
+  include_examples(
+    "a sinatra error handler",
+    exception_class: Faraday::ConnectionFailed,
+    status: 503,
+    body: "Faraday is unable to connect",
+  )
+
+  include_examples(
+    "a sinatra error handler",
     exception_class: RedisClient::TimeoutError,
     status: 503,
     body: "Redis queue timed out",
