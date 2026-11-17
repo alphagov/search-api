@@ -41,6 +41,13 @@ RSpec.describe "ErrorHandlingTest" do
 
   include_examples(
     "a sinatra error handler",
+    exception_class: OpenSearch::Transport::Transport::Errors::ServiceUnavailable,
+    status: 503,
+    body: "Opensearch is unavailable",
+  )
+
+  include_examples(
+    "a sinatra error handler",
     exception_class: Faraday::TimeoutError,
     status: 503,
     body: "Faraday timed out",
