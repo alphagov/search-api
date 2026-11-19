@@ -100,6 +100,10 @@ class Rummager < Sinatra::Application
     halt(503, "Opensearch timed out")
   end
 
+  error OpenSearch::Transport::Transport::Errors::ServiceUnavailable do
+    halt(503, "Opensearch is unavailable")
+  end
+
   error Faraday::TimeoutError do
     halt(503, "Faraday timed out")
   end
