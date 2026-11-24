@@ -17,7 +17,7 @@ module Evaluation
         link = convert_to_link(content_id) || content_id
 
         data[query] = data.fetch(query, [])
-        data[query] << ({ score: score.to_i, link: })
+        data[query] << { score: score.to_i, link: }
 
         last_query = query
       end
