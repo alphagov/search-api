@@ -12,8 +12,10 @@ class KibanaLogFormatter
 
   def save_as_gor
     File.open(@gor_traffic_replay_file, "a") do |f|
-      CSV.foreach(@csv_logs_file, headers: true) do |row|
-        f.print get_gor_entry(row)
+      logs = CSV.read(@csv_logs_file, headers: true)
+      sorted_logs = logs.sort_by { |log| Time.parse(log["@timestamp"]) }
+      sorted_logs.each do |log|
+        f.print get_gor_entry(log)
         f.print GOR_LINE_SEPARATOR
       end
     end
@@ -22,7 +24,7 @@ class KibanaLogFormatter
 private
 
   def log_timestamp(row)
-    DateTime.iso8601(row["message"][15, 25], Date::ENGLAND).strftime("%Q")
+    (Time.strptime(row["@timestamp"], "%d %b, %Y @ %H:%M:%S.%N").to_r * 1000).to_i.to_s
   end
 
   def get_gor_entry(log_entry)
@@ -31,7 +33,7 @@ private
     # "1" means it is Making a request
     gor_entry = []
     gor_entry << "1 #{Random.hex(12)} #{log_timestamp(log_entry)}000000 0"
-    gor_entry << "GET #{log_entry['request_uri'].strip} HTTP/1.1\r"
+    gor_entry << "GET #{log_entry['logjson.request_uri'].strip} HTTP/1.1\r"
     gor_entry << "Host: www.gov.uk\r"
 
     "#{gor_entry.join("\n")}\n\n"
