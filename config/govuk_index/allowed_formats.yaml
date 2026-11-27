@@ -94,7 +94,6 @@ allowed_formats:
   - /world/australia
   - /world/austria
   - /world/azerbaijan
-  - /world/bahamas
   - /world/bahrain
   - /world/bangladesh
   - /world/barbados
@@ -105,7 +104,7 @@ allowed_formats:
   - /world/bermuda
   - /world/bhutan
   - /world/bolivia
-  - /world/bonaire-st-eustatius-saba
+  - /world/bonaire-sint-eustatius-saba
   - /world/bosnia-and-herzegovina
   - /world/botswana
   - /world/brazil
@@ -219,7 +218,7 @@ allowed_formats:
   - /world/mozambique
   - /world/myanmar
   - /world/namibia
-  - /world/nauru
+  - /world/naoero
   - /world/nepal
   - /world/netherlands
   - /world/new-caledonia
@@ -256,6 +255,7 @@ allowed_formats:
   - /world/seychelles
   - /world/sierra-leone
   - /world/singapore
+  - /world/sint-maarten
   - /world/slovakia
   - /world/slovenia
   - /world/solomon-islands
@@ -269,7 +269,6 @@ allowed_formats:
   - /world/st-helena-ascension-and-tristan-da-cunha
   - /world/st-kitts-and-nevis
   - /world/st-lucia
-  - /world/st-maarten
   - /world/st-martin
   - /world/st-pierre-and-miquelon
   - /world/st-vincent-and-the-grenadines
@@ -282,6 +281,7 @@ allowed_formats:
   - /world/tajikistan
   - /world/tanzania
   - /world/thailand
+  - /world/the-bahamas
   - /world/the-gambia
   - /world/timor-leste
   - /world/togo
