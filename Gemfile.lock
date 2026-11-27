@@ -557,7 +557,7 @@ GEM
       nio4r (~> 2.0)
     racc (1.8.1)
     rack (3.2.9)
-    rack-logstasher (2.2.5)
+    rack-logstasher (3.0.0)
       logstash-event (~> 1.2)
       rack (>= 2, < 4)
     rack-protection (4.2.2)
